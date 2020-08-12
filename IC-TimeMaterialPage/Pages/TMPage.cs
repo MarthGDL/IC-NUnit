@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading;
+using IC_TimeMaterialPage.Helpers;
+using NUnit.Framework;
 using OpenQA.Selenium;
 
 namespace IC_TimeMaterialPage.Pages
@@ -28,11 +30,11 @@ namespace IC_TimeMaterialPage.Pages
 
             //Clicking the save button and waiting 1s
             driver.FindElement(By.XPath("//*[@id='SaveButton']")).Click();
-            Thread.Sleep(3000);
 
             //////////////////////////Validating that the creation was successfull////////////////////////////
 
             //Clicking the "Go to last" button
+            WaitHelper.WaitClickble(driver, "//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]");
             driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[4]/a[4]")).Click();
 
             //Asigning the Text of the last element in the last page to a string variable 
@@ -42,15 +44,21 @@ namespace IC_TimeMaterialPage.Pages
             if (textvalue == time_code)
             {
                 Console.WriteLine(time_code + " found, Creation Test passed!");
+                Assert.Pass();
             }
             else
             {
                 Console.WriteLine(time_code + " not found, Creation Test failed...");
+                Assert.Fail();
             }
         }
 
         public static void EditTM(IWebDriver driver)
         {
+            //Clicking the "Go to last" button
+            WaitHelper.WaitClickble(driver, "//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]");
+            driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[4]/a[4]")).Click();
+
             //Clicking EDIT in the last element in the grid and wait
             driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[5]/a[1]")).Click();
 
@@ -63,7 +71,8 @@ namespace IC_TimeMaterialPage.Pages
 
             //////////////////////////Validating that the edit was successfull////////////////////////////
 
-            //Clicking the "Go to last" button
+            //Clicking the "Go to last" button after a wait
+            WaitHelper.WaitClickble(driver, "//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]");
             driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[4]/a[4]")).Click();
 
             //Asigning the Text of the last element in the last page to a string variable 
@@ -73,15 +82,21 @@ namespace IC_TimeMaterialPage.Pages
             if (textvalue == "Dbot" + time_code_edit)
             {
                 Console.WriteLine(time_code_edit + " found, Edit Test passed!");
+                Assert.Pass();
             }
             else
             {
                 Console.WriteLine(time_code_edit + " not found, Edit Test failed...");
+                Assert.Fail();
             }
         }
 
         public static void DeleteTM(IWebDriver driver)
         {
+            //Clicking the "Go to last" button after a wait
+            Thread.Sleep(3000);
+            driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[4]/a[4]")).Click();
+
             //Clicking DELETE in the last element in the grid
             driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[5]/a[2]")).Click();
 
@@ -98,10 +113,12 @@ namespace IC_TimeMaterialPage.Pages
             if (textvalue != "Dbot" + "Ed")
             {
                 Console.WriteLine("Dbot" + "Ed" + " not found, Delete Test passed!");
+                Assert.Pass();
             }
             else
             {
                 Console.WriteLine("Dbot" + "Ed" + " found, Delete Test failed...");
+                Assert.Fail();
             }
         }
     }

@@ -1,19 +1,23 @@
 ﻿using System;
 using IC_TimeMaterialPage.Pages;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace IC_TimeMaterialPage
+namespace IC_TimeMaterialPage.Helpers
 {
-    class Program
+    class SetupHelper
     {
-        static void Main(string[] args)
+        public static IWebDriver driver;
+
+        [OneTimeSetUp]
+        public static void LoginPageSetup()
         {
             //Indicating user that the test is starting
             Console.WriteLine("Initiating Test...");
 
             //Initiating browser
-            IWebDriver driver = new ChromeDriver();
+            driver = new ChromeDriver();
 
             //Creting Page Objects
             /*
@@ -27,15 +31,12 @@ namespace IC_TimeMaterialPage
 
             //Navigate to TM
             HomePage.goToTM(driver);
+        }
 
-            //Create TM
-            TMPage.CreateTM(driver);
+        [OneTimeTearDown]
+        public static void FinishTest()
+        {
 
-            //Edit TM
-            TMPage.EditTM(driver);
-
-            //Delete TM
-            TMPage.DeleteTM(driver);
         }
     }
 }
