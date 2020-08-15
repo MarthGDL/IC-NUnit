@@ -29,14 +29,12 @@ namespace IC_TimeMaterialPage.Helpers
             //login
             LoginPage.logIn(driver);
 
-            //Navigate to TM
-            HomePage.goToTM(driver);
         }
 
         [OneTimeTearDown]
         public static void FinishTest()
         {
-
+            //driver.Close();
         }
     }
 }

@@ -17,18 +17,24 @@ namespace IC_TimeMaterialPage
         [Test]
         public static void CreateTMTest()
         {
+            //Checking if we are in the TM page
+            TMPage.checkIfTM(driver);
             //Create TM
             TMPage.CreateTM(driver);
         }
         [Test]
         public static void EditTMTest()
         {
+            //Checking if we are in the TM page
+            TMPage.checkIfTM(driver);
             //Edit TM
             TMPage.EditTM(driver);
         }
         [Test]
         public static void DeleteTMTest()
         {
+            //Checking if we are in the TM page
+            TMPage.checkIfTM(driver);
             //Delete TM
             TMPage.DeleteTM(driver);
         }

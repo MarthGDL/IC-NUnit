@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using IC_TimeMaterialPage.Helpers;
+using IC_TimeMaterialPage.Test;
 using NUnit.Framework;
 using OpenQA.Selenium;
 
@@ -8,14 +9,29 @@ namespace IC_TimeMaterialPage.Pages
 {
     class TMPage
     {
+        public static void checkIfTM(IWebDriver driver)
+        {
+            if (driver.Url != "http://horse-dev.azurewebsites.net/TimeMaterial") 
+            {
+                if (driver.Url == "http://horse-dev.azurewebsites.net/")
+                {
+                    HomePage.goToTM(driver);
+                }
+                else
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+        
         public static void CreateTM(IWebDriver driver)
         {
             //Clicking Create button
             driver.FindElement(By.XPath("//*[@id='container']/p/a")).Click();
 
             //Entering Time details
-            string time_code = "Dbot";
-            driver.FindElement(By.Id("Code")).SendKeys(time_code);
+            //string time_code = "Dbot";
+            driver.FindElement(By.Id("Code")).SendKeys(TestData.formValidation);
             driver.FindElement(By.Id("Description")).SendKeys("Time Automatically Created on 08/08/2020");
 
             /////////////////////////////////////Selecting drop down option////////////////////////////////////////////
@@ -41,14 +57,14 @@ namespace IC_TimeMaterialPage.Pages
             String textvalue = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]")).Text;////*[@id="tmsGrid"]/div[3]/table/tbody/tr[1]/td[5]/a[1]
 
             //Comparing the Text to the time_code variable
-            if (textvalue == time_code)
+            if (textvalue == TestData.formValidation)
             {
-                Console.WriteLine(time_code + " found, Creation Test passed!");
+                Console.WriteLine(TestData.formValidation + " found, Creation Test passed!");
                 Assert.Pass();
             }
             else
             {
-                Console.WriteLine(time_code + " not found, Creation Test failed...");
+                Console.WriteLine(TestData.formValidation + " not found, Creation Test failed...");
                 Assert.Fail();
             }
         }
@@ -62,12 +78,13 @@ namespace IC_TimeMaterialPage.Pages
             //Clicking EDIT in the last element in the grid and wait
             driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[5]/a[1]")).Click();
 
-            String time_code_edit = "Ed";
-            driver.FindElement(By.Id("Code")).SendKeys(time_code_edit);
+            //Get the code of the element and modify it (after waiting for the page loading)
+            WaitHelper.WaitClickble(driver, "//*[@id='Code']");
+            String time_code_edit = driver.FindElement(By.Id("Code")).Text;
+            driver.FindElement(By.Id("Code")).SendKeys("Ed");
 
             //Clicking the save button and wait
             driver.FindElement(By.XPath("//*[@id='SaveButton']")).Click();
-            Thread.Sleep(3000);
 
             //////////////////////////Validating that the edit was successfull////////////////////////////
 
@@ -79,14 +96,14 @@ namespace IC_TimeMaterialPage.Pages
             string textvalue = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]")).Text;////*[@id="tmsGrid"]/div[3]/table/tbody/tr[1]/td[5]/a[1]
 
             //Comparing the Text to the time_code variable
-            if (textvalue == "Dbot" + time_code_edit)
+            if (textvalue != time_code_edit)
             {
-                Console.WriteLine(time_code_edit + " found, Edit Test passed!");
+                Console.WriteLine(time_code_edit + " is different from "+ textvalue + ", Edit Test passed!");
                 Assert.Pass();
             }
             else
             {
-                Console.WriteLine(time_code_edit + " not found, Edit Test failed...");
+                Console.WriteLine(time_code_edit + " isn't different from " + textvalue + ", Edit Test failed...");
                 Assert.Fail();
             }
         }
@@ -94,30 +111,31 @@ namespace IC_TimeMaterialPage.Pages
         public static void DeleteTM(IWebDriver driver)
         {
             //Clicking the "Go to last" button after a wait
-            Thread.Sleep(3000);
+            WaitHelper.WaitClickble(driver, "//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]");
             driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[4]/a[4]")).Click();
+
+            //Asigning the last element delete button to a variable
+            IWebElement deletedTextvalue = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[5]/a[2]"));
 
             //Clicking DELETE in the last element in the grid
             driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[5]/a[2]")).Click();
 
             //Creating a new driver to the alert message and Clicking YES in the alert message, after we use a delay
             driver.SwitchTo().Alert().Accept();
-            Thread.Sleep(3000);
+            WaitHelper.WaitClickble(driver, "//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]");
 
             //////////////////////////Validating that the delete was successfull////////////////////////////
 
-            //Asigning the Text of the last element in the last page to a string variable 
-            string textvalue = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]")).Text;////*[@id="tmsGrid"]/div[3]/table/tbody/tr[1]/td[5]/a[1]
 
             //Comparing the Text to the time_code variable
-            if (textvalue != "Dbot" + "Ed")
+            if (driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[5]/a[2]")) != deletedTextvalue)
             {
-                Console.WriteLine("Dbot" + "Ed" + " not found, Delete Test passed!");
+                Console.WriteLine("Previous element not found, Delete Test passed!");
                 Assert.Pass();
             }
             else
             {
-                Console.WriteLine("Dbot" + "Ed" + " found, Delete Test failed...");
+                Console.WriteLine("Previous element found, Delete Test failed...");
                 Assert.Fail();
             }
         }

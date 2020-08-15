@@ -12,22 +12,12 @@ namespace IC_TimeMaterialPage.Test
     {
 
         [Test]
-        public static void CreateTMTest()
+        public static void CreateEmployeeTest()
         {
+            //Checking if we are in the Employee page
+            EmployeePage.checkIfEmployee(driver);
             //Create TM
-            TMPage.CreateTM(driver);
-        }
-        [Test]
-        public static void EditTMTest()
-        {
-            //Edit TM
-            TMPage.EditTM(driver);
-        }
-        [Test]
-        public static void DeleteTMTest()
-        {
-            //Delete TM
-            TMPage.DeleteTM(driver);
+            EmployeePage.CreateEmployee(driver);
         }
     }
 }

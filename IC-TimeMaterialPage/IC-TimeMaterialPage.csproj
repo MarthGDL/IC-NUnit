@@ -67,10 +67,12 @@
   <ItemGroup>
     <Compile Include="Helpers\SetupHelper.cs" />
     <Compile Include="Helpers\WaitHelper.cs" />
+    <Compile Include="Pages\EmployeePage.cs" />
     <Compile Include="Pages\HomePage.cs" />
     <Compile Include="Pages\LoginPage.cs" />
     <Compile Include="Pages\TMPage.cs" />
     <Compile Include="Test\EmployeeTest.cs" />
+    <Compile Include="Test\TestData.cs" />
     <Compile Include="Test\TMTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
